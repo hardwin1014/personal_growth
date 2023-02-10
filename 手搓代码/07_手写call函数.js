@@ -9,6 +9,12 @@
  * 7. 返回结果
  * */
 
+// function.call(thisArg, arg1, arg2, ...)
+// thisArg其实就是执行的时候，this的值
+// call和apply：函数调动call()方法在执行的时候，函数的里面的this会指向第一个参数值，
+// 除第一个参数值后面的若干支都是传进该函数，简而言之就是改变函数运行时的this指向。
+
+// fn.call(obj)执行的时候，可以看作在obj对象里面有个fn函数执行。那么fn函数里面的this指向就是obj
 // call函数实现
 Function.prototype.myCall = function (context){
     // 判断调用对象
@@ -23,7 +29,7 @@ Function.prototype.myCall = function (context){
     // 判断context是否传入，如果未传入则设置为window
     context = context || window
 
-    // 将调用函数设为对象的方法
+    // 将调用函数设为对象的方法，可以看做context中有fn函数，此时this就指向了context
     context.fn = this
 
     // 调用函数
