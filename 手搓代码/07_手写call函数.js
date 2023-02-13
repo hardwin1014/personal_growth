@@ -23,19 +23,21 @@ Function.prototype.myCall = function (context){
     }
 
     // 获取参数
+    // 返回了一个新的数组，就是除了第一位，其他剩余的参数数组
     let args = [...arguments].splice(1)
     let result = null
 
     // 判断context是否传入，如果未传入则设置为window
     context = context || window
 
+    // 给对象中绑定一个方法
     // 将调用函数设为对象的方法，可以看做context中有fn函数，此时this就指向了context
     context.fn = this
 
     // 调用函数
     result = context.fn(...args)
 
-    // 将属性删除
+    // 将对象中的属性删除
     delete context.fn
     return result
 }
