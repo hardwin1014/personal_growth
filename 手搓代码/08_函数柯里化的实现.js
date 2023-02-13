@@ -1,27 +1,24 @@
 // 函数柯里化指的是一种将使用多个参数的一个函数转换成一系列使用一个参数的函数的技术
-function curry(fn, args) {
-    // 获取函数需要的参数长度
-    let length = fn.length;
-
+// 支持多参数传递
+function progressCurrying(fn, args) {
+    let _this = this
+    let len = fn.length;
     args = args || [];
 
     return function() {
-        let subArgs = args.slice(0);
+        // JavaScript中的 Array.prototype.slice.call(arguments) 能将有length属性的对象转换为数组。
+        // 此时的arguments是return这个函数的参数
+        let _args = Array.prototype.slice.call(arguments);
+        Array.prototype.push.apply(args, _args);
 
-        // 拼接得到现有的所有参数
-        for (let i = 0; i < arguments.length; i++) {
-            subArgs.push(arguments[i]);
+        // 如果参数个数小于最初的fn.length，则递归调用，继续收集参数
+        if (_args.length < len) {
+            return progressCurrying.call(_this, fn, _args);
         }
 
-        // 判断参数的长度是否已经满足函数所需参数的长度
-        if (subArgs.length >= length) {
-            // 如果满足，执行函数
-            return fn.apply(this, subArgs);
-        } else {
-            // 如果不满足，递归返回科里化的函数，等待参数的传入
-            return curry.call(this, fn, subArgs);
-        }
-    };
+        // 参数收集完毕，则执行fn
+        return fn.apply(this, _args);
+    }
 }
 
 // es6 实现
