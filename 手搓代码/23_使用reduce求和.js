@@ -21,6 +21,25 @@ const res3 = arr3.reduce((prev, cur) => {
 console.log(res3)
 
 
+// ES5 求和
+function sum() {
+    let sum = 0;
+    Array.prototype.forEach.call(arguments, function (item){
+        sum += item * 1
+    })
+    return sum
+}
+
+// ES6
+function sum(...nums) {
+    let sum = 0
+    nums.forEach(item => {
+        sum += item * 1
+    })
+    return sum
+}
+
+
 
 
 // 将js对象转换为树形结构
