@@ -9,7 +9,7 @@ function findMostWord(article) {
         maxNum = 0,
         maxWord = ""
 
-    article = " " + wordList.join(" ") + " "
+    article = " " + wordList.join("  ") + " "
 
     // 遍历判断单词出现次数
     wordList.forEach(item => {
