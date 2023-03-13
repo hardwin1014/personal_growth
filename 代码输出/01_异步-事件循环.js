@@ -97,3 +97,53 @@ const timer1 = setTimeout(() => {
 console.log('start')
 
 // start  promise1  timer1   promise2  timer2
+
+// 1. 首先promise.resolve().then是一个微任务，加入微任务队列
+// 2. 执行timer1，它是一个宏任务，加入宏任务队列，
+// 3. 继续执行下面的同步代码，打印出start
+// 4. 这样第一轮宏任务就执行完了，开始执行微任务Promise.resolve().then打印出promise1
+// 5. 遇到timer2，它是一个宏任务，将其他加入宏任务队列，此时宏任务队列有两个任务。分别是timer1、timer2
+// 6. 这样第一轮微任务就执行完了，开始执行第二轮宏任务，首先执行定时器timer1 打印timer1
+// 7. 遇到promise.resolve().then(),它是一个微任务，加入微任务队列
+// 8. 开始执行微任务队列中的任务，打印promise2
+// 9. 最后执行宏任务timer2定时器，打印出timer2
+
+
+// 5. 代码输出结果
+const promise5 = new Promise((resolve, reject) => {
+    resolve('success1')
+    reject('error')
+    resolve('sucess2')
+})
+
+promise5.then(res => {
+    console.log('then', res)
+}).catch(err => {
+    console.log('catch', err)
+})
+
+// 输出结果如下：
+// then: success1
+
+// 题目考察的就是Promise的状态在发生变化之后，就不会再发生变化。开始状态由pending变为resolved,
+// 说明状态已经变为已完成状态，下面的两个状态的就不会再执行了，同时下面的catch也不会捕获到错误
+
+// 6. 代码输出结果
+Promise.resolve(1)
+    .then(2) // then方法接收的是一个函数，如果非函数的话，会解释为 then(null)
+    .then(Promise.resolve(3))
+    .then(console.log)
+
+// 1
+// Promise{ <fulfilled>: undefined }
+
+// Promise.resolve方法的参数如果是一个原始值，或者是一个不具有then方法的对象
+// 则Promise.resolve方法返回一个新的Promise对象，状态为resolved,Promise.resolve方法的参数
+// 会同时传给回调函数
+
+// then方法接受的参数是函数，而如果传递的并非是一个函数，他实际上会将其解释为 then(null)
+// 这就会导致前一个Promise的结果会传递下面
+
+
+// 7. 代码输出结果
+
