@@ -189,4 +189,27 @@ Promise.resolve(1)
 // 所以第二个then中的res得到的实际上是第一个then的返回值，并且return2会被包装成resolve(2) 被最后的then打印输出2
 
 
+// 9. 代码输出结果
+Promise.resolve().then(() => {
+    return new Error("error!!!")
+}).then(res => {
+    console.log('then: ',res)
+}).catch(err => {
+    console.log('catch', err)
+})
 
+// "then: "  "Error: error!!!"
+// 返回任意一个非promise的值都会被包裹成promise对象，因此这里的return new Error('error!!!')
+// 也被包裹成了return Promise.resolve(new Error('error!!!')),因此它会被then捕获而不是catch
+
+
+// 10. 代码输出结果
+const promise10 = Promise.resolve().then(() => {
+    return promise10
+})
+
+promise10.catch(console.err)
+
+// 输出结果如下：
+// Uncaught (in promise) TypeError: Chaining cycle detected for promise #<Promise>
+// 这里其实是一个坑，.then或 .catch返回值不能是promise本身，否则会造成死循环。
