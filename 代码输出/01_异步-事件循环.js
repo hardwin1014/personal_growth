@@ -164,3 +164,29 @@ setTimeout(() => {
     console.log('promise7', promise7) // 4
     console.log('promise72', promise72)  // 5
 },2000)
+
+
+// 8. 代码输出结果
+Promise.resolve(1)
+  .then(res => {
+      console.log(res)
+      return 2
+  })
+  .catch(err => {
+      return 3
+  })
+  .then(res => {
+      console.log(res)
+  })
+
+// 1
+// 2
+
+// Promise是可以链式调用的，由于每次调用.then或者.catch都会返回一个新的promise，从而实现了链式调用
+// 它并不像一般任务的链式调用一样return this
+
+// 上面输出的结果之所以依次打印1 和 2，是因为resolve(1) 之后走的第一个then方法，并没有进catch里
+// 所以第二个then中的res得到的实际上是第一个then的返回值，并且return2会被包装成resolve(2) 被最后的then打印输出2
+
+
+
