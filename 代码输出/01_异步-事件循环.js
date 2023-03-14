@@ -146,4 +146,21 @@ Promise.resolve(1)
 
 
 // 7. 代码输出结果
+// 处理主任务  ->  微任务  —>  宏任务
+const promise7 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve('success')
+    }, 1000)
+})
 
+const promise72 = promise7.then(() => {
+    throw new Error("error!!!")  // 3
+})
+
+console.log('promise7', promise7)  // 1
+console.log('promise72', promise72)  // 2
+
+setTimeout(() => {
+    console.log('promise7', promise7) // 4
+    console.log('promise72', promise72)  // 5
+},2000)
