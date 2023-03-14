@@ -213,3 +213,14 @@ promise10.catch(console.err)
 // 输出结果如下：
 // Uncaught (in promise) TypeError: Chaining cycle detected for promise #<Promise>
 // 这里其实是一个坑，.then或 .catch返回值不能是promise本身，否则会造成死循环。
+
+
+// 11. 代码输出结果
+Promise.resolve(1)
+    .then(2)
+    .then(Promise.resolve(3))
+    .then(console.log)
+
+// 1
+// 好多then，记住一个原则：.then  .catch 的参数期望是函数，传入非函数值则会发生值透传。
+// 第一个then和第二个then中传入的都不是函数，一个是数字，一个是对象，因此发生了透传，将resolve(1)的值直接传到最后一个then里
