@@ -224,3 +224,32 @@ Promise.resolve(1)
 // 1
 // 好多then，记住一个原则：.then  .catch 的参数期望是函数，传入非函数值则会发生值透传。
 // 第一个then和第二个then中传入的都不是函数，一个是数字，一个是对象，因此发生了透传，将resolve(1)的值直接传到最后一个then里
+
+
+// 12. 代码输出
+Promise.reject("err!!!")
+  .then(res => {
+      console.log('success', res)
+  },err => {
+      console.log('error', err)
+  }).catch(err => {
+    console.log('catch', err)
+})
+
+// error err!!!
+// then函数中的两个参数：
+//   第一个参数是用来处理Promise成功的函数
+//   第二个则是处理失败的函数
+// 也就是说Promise.resolve('1')的值会进入成功的函数，Promise.reject('2')的值会进入失败的函数
+// 在这道题中，错误直接被then的第二个参数捕获了，所以就不会被catch捕获了，输出结果 error err！！！
+
+// 但是如果是下面这样
+// 在then的第一个参数中抛出了错误，那么他就不会被第二个参数捕获，而是直接被后面的catch捕获到
+Promise.resolve()
+  .then(function success(res){
+      throw new Error('error!!!')
+  },function fail1(err) {
+      console.log('fail', err)
+  }).catch(function fail2(err) {
+    console.log('fail2', err)
+})
