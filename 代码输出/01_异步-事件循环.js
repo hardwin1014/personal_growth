@@ -339,3 +339,43 @@ Promise.all([runAsync(1),runReject(4),runAsync(3),runReject(2)])
 
 // 可以看到。catch捕获到了第一个错误，在这道题目中最先的错误就是runReject(2)的结果，
 // 如果一组异步操作中有一个异常都不会进入.then()d的第一个回调函数参数中。会被.then()的第二个回调函数捕获。
+
+
+// 16. 代码输出结果
+function runAsync(x) {
+    const p = new Promise(r => setTimeout(() => r(x, console.log(x)),1000))
+    return p
+}
+Promise.race([runAsync(1), runAsync(2), runAsync(3)])
+    .then(res => console.log('result',res))
+    .then(err => console.log(err))
+
+// then只会捕获第一个成功的方法，其他的函数虽然还会继续执行，但是不是被then捕获了
+
+
+// 17. 代码输出结果
+function runAsync(x) {
+    const p = new Promise(r =>
+        setTimeout(() => r(x, console.log(x)),1000)
+    )
+    return p
+}
+
+function runReject(x) {
+    const p = new Promise((res,rej) =>
+        setTimeout(() => rej(`Error: ${x}`, console.log(x)),1000 * x)
+    )
+    return p
+}
+
+Promise.race([runReject(0),runAsync(1),runAsync(2),runAsync(3)])
+    .then(res => console.log("result: ", res))
+    .catch(err => console.log(err))
+
+// 输出结果如下：
+// 0    Error: 0    1    2    3
+
+// 可以看到在catch捕获到第一个错误之后，后面的代码还不执行，不过不会再被捕获了
+
+// 注意： all和race传入的数组中，如果有会抛出异常的异步任务，那么只有最先抛出的错误会被捕获，并且是被then的第二个参数或者后面的catch捕获
+// 但并不会影响数组中其他的异步任务的执行
