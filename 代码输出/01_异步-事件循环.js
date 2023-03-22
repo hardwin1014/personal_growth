@@ -311,3 +311,31 @@ Promise.all([runAsync(1),runAsync(2),runAsync(3)]).then(res => {
 // 首先定义了一个Promise，来异步执行函数，runAsync,该函数传入一个值x,然后间隔一秒后打印出这个x
 // 之后再使用Promise.all来执行这个函数，执行的时候，看到一秒之后输出了1,2，3，同时输出了数组[1,2,3]
 // 三个函数是同步执行的，并且在一个回调函数中返回了所有的结果，并且结果和函数的执行顺序是一致的
+
+
+// 15. 代码输出结果
+function runAsync(x) {
+    const p = new Promise(r => setTimeout(() => r(x, console.log(x)),1000))
+    return p
+}
+function runReject(x) {
+    const p = new Promise((res,rej) => setTimeout(() => rej(`Error:${x}`,console.log(x)),1000 * x))
+    return p
+}
+Promise.all([runAsync(1),runReject(4),runAsync(3),runReject(2)])
+    .then(res => console.log(res))
+    .then(err => console.log(err))
+
+// 1s后输出
+// 1
+// 3
+
+// 2s后输出
+// 2
+// Error: 2
+
+// 4s后输出
+// 4
+
+// 可以看到。catch捕获到了第一个错误，在这道题目中最先的错误就是runReject(2)的结果，
+// 如果一组异步操作中有一个异常都不会进入.then()d的第一个回调函数参数中。会被.then()的第二个回调函数捕获。
