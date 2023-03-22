@@ -350,6 +350,7 @@ Promise.race([runAsync(1), runAsync(2), runAsync(3)])
     .then(res => console.log('result',res))
     .then(err => console.log(err))
 
+// 1   "result: 1"   2   3
 // then只会捕获第一个成功的方法，其他的函数虽然还会继续执行，但是不是被then捕获了
 
 
@@ -375,7 +376,36 @@ Promise.race([runReject(0),runAsync(1),runAsync(2),runAsync(3)])
 // 输出结果如下：
 // 0    Error: 0    1    2    3
 
-// 可以看到在catch捕获到第一个错误之后，后面的代码还不执行，不过不会再被捕获了
+// 可以看到在catch捕获到第一个错误之后，后面的代码还在执行，不过不会再被捕获了
 
 // 注意： all和race传入的数组中，如果有会抛出异常的异步任务，那么只有最先抛出的错误会被捕获，并且是被then的第二个参数或者后面的catch捕获
 // 但并不会影响数组中其他的异步任务的执行
+
+
+// 18. 代码输出结果
+async function async1(){
+    console.log("async1 start")
+    await async2()
+    console.log("async1 end")
+}
+
+async function async2(){
+    console.log("async2")
+}
+
+async1()
+console.log("start")
+
+// async1 start
+// async2
+// start
+// async1 end
+
+/*
+* 代码的执行过程如下：
+* 1. 首先执行函数中的同步代码 async1 start， 之后遇到了await，它会阻塞async1后面代码的执行，因此会先执行async2中的同步代码async2，然后跳出async1
+* 2. 跳出async1 函数后，执行同步代码start
+* 3. 在一轮宏任务全部执行完之后，再来执行await后面的内容async1 end
+*
+* 这里可以理解为await后面的语句相当于放到了new Promise中，下一行及之后的语句相当于放在Promise.then
+* */
