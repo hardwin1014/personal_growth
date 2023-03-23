@@ -453,7 +453,7 @@ async function async20(){
         console.log("promise1")
     })
 
-    console.log("async1 success")
+    console.log("async1 success") // 为什么没执行呢，是因为 await后的promise没有返回值，状态一直在pending状态，所以await之后的内容是不会执行的，包括async1后面的.then
     return "async1 end"
 }
 
@@ -467,3 +467,21 @@ console.log("script end")
 // script end
 
 // 注意是在async1中的await后面的promise是没有返回值的，也就是它的状态始终是pending状态，所以在await之后的内容是不会执行的，包括async1后面的.then
+
+// 21. 代码输出结果
+async function async21(){
+    console.log("async1 start")  // 2
+    await new Promise(resolve => {
+        console.log("promise1")   // 3
+        resolve("promise1 resolve")
+    }).then(res => console.log(res))  // 5
+    console.log("async1 success")  // 6
+    return "async1 end"  // 7
+}
+
+console.log("script start")  // 1
+async21().then(res => console.log(res))
+console.log("script end")
+
+// 这里是对上面一题进行改造，加上resolve
+// script start       async1 start      promise1       script end        promise1 resolve       async1 success        async1 end
