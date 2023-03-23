@@ -409,3 +409,39 @@ console.log("start")
 *
 * 这里可以理解为await后面的语句相当于放到了new Promise中，下一行及之后的语句相当于放在Promise.then
 * */
+
+
+// 19. 代码输出结果
+async function async19(){
+    console.log("async start")   // 1
+    await async20()
+    console.log("async1 end")
+    setTimeout(() => {
+        console.log("timer1")
+    },0)
+}
+
+async function async20(){
+    setTimeout(() => {
+        console.log("timer2")
+    },0)
+    console.log("async2")  // 2
+}
+
+async19()
+
+setTimeout(() => {
+    console.log("timer3")
+},0)
+
+console.log("start")  //  3
+
+// "async start"     "async2"        "start"      "async1 end"        "timer2"        "timer3"          "timer1"
+
+/*
+*  1. 首先进入 async1 打印出async1 start
+*  2. 之后遇到 async2 进入async2，遇到定时器timer2,加入宏任务队列，之后打印async2
+*  3. 由于async阻塞了后面代码的执行，所以执行后面的定时器timer3，将其加入宏任务队列，之后打印start
+*  4. 然后执行async2后面的代码，打印出async1 end  遇到定时器timer1，将其加入宏任务队列
+*  5. 最后，宏任务队列有三个任务，先后顺序为timer2  timer3  timer1 没有微任务，所以直接所有的宏任务按照先进先出的原则执行
+* */
