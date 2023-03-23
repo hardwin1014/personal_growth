@@ -445,3 +445,25 @@ console.log("start")  //  3
 *  4. 然后执行async2后面的代码，打印出async1 end  遇到定时器timer1，将其加入宏任务队列
 *  5. 最后，宏任务队列有三个任务，先后顺序为timer2  timer3  timer1 没有微任务，所以直接所有的宏任务按照先进先出的原则执行
 * */
+
+// 20. 代码输出结果
+async function async20(){
+    console.log("async1 start")
+    await new Promise((resolve) => {
+        console.log("promise1")
+    })
+
+    console.log("async1 success")
+    return "async1 end"
+}
+
+console.log("script start")
+async20().then(res => console.log(res))
+console.log("script end")
+
+// script start
+// async1 start
+// promise1
+// script end
+
+// 注意是在async1中的await后面的promise是没有返回值的，也就是它的状态始终是pending状态，所以在await之后的内容是不会执行的，包括async1后面的.then
