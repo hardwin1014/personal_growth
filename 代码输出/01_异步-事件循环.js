@@ -481,7 +481,7 @@ async function async21(){
 
 console.log("script start")  // 1
 async21().then(res => console.log(res))
-console.log("script end")
+console.log("script end")  // 4
 
 // 这里是对上面一题进行改造，加上resolve
 // script start       async1 start      promise1       script end        promise1 resolve       async1 success        async1 end
