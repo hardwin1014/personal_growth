@@ -2,24 +2,19 @@
 // 比如调用JSON.stringify()对该对象进行序列化就会保存：Converting circular structure to JSON
 
 // 判断一个对象中是否已存在循环引用：
-
-const isCycleObject = (obj, parent) => {
-    const parentArr = parent || [obj]
-    for(let i in obj){
-        if(typeof obj[i] === 'object'){
-            let flag = false
-            parentArr.forEach(pObj => {
-                if(pObj === obj[i]){
-                    flag = true
-                }
-            })
-            if(flag) return true
-            flag = isCycleObject(obj[i],[...parentArr, obj[i]])
-            if(flag) return true
+const isCycleObject2 = (obj, parent = []) => {
+    for (let i in obj) {
+        if (typeof obj[i] === 'object') {
+            if (parent.includes(obj[i])) {
+                return true;
+            }
+            if (isCycleObject(obj[i], [...parent, obj[i]])) {
+                return true;
+            }
         }
     }
-    return false
-}
+    return false;
+};
 
 const a = 1
 const b = { a }

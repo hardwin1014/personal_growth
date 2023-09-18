@@ -13,6 +13,7 @@ console.log(4)
 // promise.then是微任务，它会在所有的宏任务执行后才执行
 // 同时promise中内部的状态没有发生变化（resolve， reject），一直是pending状态，所以不会输出3
 
+//快排
 
 
 // 2, 代码输出2

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas 扇形</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="200" height="200"></canvas>
+
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+
+        // 设置起始点
+        var centerX = canvas.width / 2;
+        var centerY = canvas.height / 2;
+
+        // 设置半径和角度
+        var radius = 80;
+        var startAngle = 0;
+        var endAngle = Math.PI * 2;
+
+        // 绘制扇形
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+
+        // 填充颜色
+        ctx.fillStyle = "red";
+        ctx.fill();
+
+        // 绘制边框
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    </script>
+</body>
+</html>
